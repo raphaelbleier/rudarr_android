@@ -110,4 +110,4 @@ jobs:
         run: yes | sdkmanager "platforms;android-37.0" "build-tools;36.0.0"
 
       - name: Run Android lint
-        run: ./gradlew :app:lintDebug --no-daemon
+        run: ./gradlew :app:lintDebug :wearApp:lintDebug --no-daemon

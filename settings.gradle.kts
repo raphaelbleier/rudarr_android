@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Ruddarr Android"
 include(":app")
+include(":wearApp")

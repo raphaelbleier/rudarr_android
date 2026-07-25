@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Added a standalone Wear OS client with Material 3 Expressive, local Radarr and Sonarr status, and encrypted watch-side credentials
 - Added a native Android app with Material 3 Expressive, secure Arr instance management, media libraries, calendar, activity queue, and series episode controls
 - Support alternate instance URLs and automatic network detection
 - Detect instance protocol automatically when none is set

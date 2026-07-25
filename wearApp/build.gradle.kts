@@ -5,18 +5,14 @@ plugins {
 }
 
 android {
-    namespace = "uk.bleier.ruddarr"
+    namespace = "uk.bleier.ruddarr.wear"
     compileSdk = 37
 
-    buildFeatures {
-        buildConfig = true
-    }
-
     defaultConfig {
-        applicationId = "uk.bleier.ruddarr"
-        minSdk = 26
+        applicationId = "uk.bleier.ruddarr.wear"
+        minSdk = 30
         targetSdk = 37
-        versionCode = 2
+        versionCode = 1
         versionName = "2.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -62,25 +58,20 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     implementation(platform(libs.compose.bom))
-    androidTestImplementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.material3)
-    implementation(libs.compose.material3.window.size)
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+    implementation(libs.wear.compose.foundation)
+    implementation(libs.wear.compose.material3)
+    implementation(libs.wear.compose.navigation)
+
     debugImplementation(libs.compose.ui.tooling)
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-    androidTestImplementation(libs.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
-
     testImplementation(libs.junit)
 }

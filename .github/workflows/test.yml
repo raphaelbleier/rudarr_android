@@ -38,8 +38,8 @@ jobs:
       - name: Install Android SDK platform
         run: yes | sdkmanager "platforms;android-37.0" "build-tools;36.0.0"
 
-      - name: Assemble debug APK
-        run: ./gradlew :app:assembleDebug --no-daemon
+      - name: Assemble Android and Wear OS debug APKs
+        run: ./gradlew :app:assembleDebug :wearApp:assembleDebug :wearApp:testDebugUnitTest --no-daemon
 
       - name: Enable KVM
         run: |
