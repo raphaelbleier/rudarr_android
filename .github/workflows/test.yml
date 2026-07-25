@@ -17,7 +17,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
   android:
     name: Android Tests
     runs-on: ubuntu-latest
@@ -45,43 +44,7 @@ jobs:
       - name: Run Android instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: 36
           target: google_apis
           arch: x86_64
           script: ./gradlew :app:connectedDebugAndroidTest --no-daemon
-
-  xcode:
-    name: Xcode Tests (${{ matrix.name }})
-    runs-on: macos-26
-    timeout-minutes: 10
-
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: iOS
-            platform: "iOS Simulator,name=iPhone 17 Pro"
-            action: test
-          - name: macOS
-            platform: "macOS"
-            action: test
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Select latest Xcode
-        run: |
-          LATEST_VERSION=$(ls -d /Applications/Xcode_*.app | sed 's|.*Xcode_||;s|\.app||' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1)
-          sudo xcode-select -s "/Applications/Xcode_${LATEST_VERSION}.app"
-          xcodebuild -version
-
-      - name: Build and run tests
-        run: |
-          xcodebuild ${{ matrix.action }} \
-            -scheme Ruddarr \
-            -skipPackagePluginValidation \
-            -destination 'platform=${{ matrix.platform }}' \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO

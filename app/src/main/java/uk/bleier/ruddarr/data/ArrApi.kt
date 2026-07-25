@@ -188,7 +188,7 @@ class ArrApi {
 
     private fun buildUrl(base: String, path: String, query: Map<String, String>): String {
         val encodedQuery = query.entries.joinToString("&") { (key, value) ->
-            "${URLEncoder.encode(key, Charsets.UTF_8)}=${URLEncoder.encode(value, Charsets.UTF_8)}"
+            "${URLEncoder.encode(key, "UTF-8")}=${URLEncoder.encode(value, "UTF-8")}"
         }
         return "${base.trimEnd('/')}/api/v3/${path.trimStart('/')}" + if (encodedQuery.isBlank()) "" else "?$encodedQuery"
     }

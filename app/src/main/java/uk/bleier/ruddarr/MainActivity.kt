@@ -3,6 +3,7 @@ package uk.bleier.ruddarr
 import android.os.Bundle
 import android.content.Intent
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -99,7 +100,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -169,7 +169,8 @@ private val destinations = listOf(
 private fun RuddarrApp(viewModel: RuddarrViewModel) {
     val state = viewModel.state
     val snackbars = remember { SnackbarHostState() }
-    val width = calculateWindowSizeClass(LocalContext.current as ComponentActivity).widthSizeClass
+    val width = LocalActivity.current?.let { calculateWindowSizeClass(it).widthSizeClass }
+        ?: WindowWidthSizeClass.Compact
 
     RuddarrTheme(darkTheme = true, useDynamicColor = false) {
         RuddarrBackdrop {
