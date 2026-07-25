@@ -18,6 +18,38 @@ concurrency:
 
 jobs:
 
+  android:
+    name: Android Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK platform
+        run: yes | sdkmanager "platforms;android-37.0" "build-tools;36.0.0"
+
+      - name: Assemble debug APK
+        run: ./gradlew :app:assembleDebug --no-daemon
+
+      - name: Run Android instrumentation tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          script: ./gradlew :app:connectedDebugAndroidTest --no-daemon
+
   xcode:
     name: Xcode Tests (${{ matrix.name }})
     runs-on: macos-26

@@ -1,0 +1,20 @@
+[
+  {
+    "service": "RADARR",
+    "label": "Home Radarr",
+    "primaryUrl": "https://radarr.example.com",
+    "alternateUrl": "",
+    "apiKey": "replace-with-a-local-api-key",
+    "headers": [],
+    "mode": "NORMAL"
+  },
+  {
+    "service": "SONARR",
+    "label": "Home Sonarr",
+    "primaryUrl": "https://sonarr.example.com",
+    "alternateUrl": "",
+    "apiKey": "replace-with-a-local-api-key",
+    "headers": [],
+    "mode": "NORMAL"
+  }
+]

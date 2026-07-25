@@ -1,6 +1,16 @@
 # macOS
 .DS_Store
 
+# Android / Gradle
+.gradle/
+.kotlin/
+local.properties
+*.apk
+app/src/debug/assets/seed-instances.json
+
+# Local code-intelligence index
+graphify-out/
+
 # Sentry
 .sentryclirc
 

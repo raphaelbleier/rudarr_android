@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="movies"
+        android:enabled="true"
+        android:shortcutShortLabel="@string/shortcut_movies"
+        android:shortcutLongLabel="@string/shortcut_movies_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ruddarr://movies" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="series"
+        android:enabled="true"
+        android:shortcutShortLabel="@string/shortcut_series"
+        android:shortcutLongLabel="@string/shortcut_series_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ruddarr://series" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="calendar"
+        android:enabled="true"
+        android:shortcutShortLabel="@string/shortcut_calendar"
+        android:shortcutLongLabel="@string/shortcut_calendar_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ruddarr://calendar" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="settings"
+        android:enabled="true"
+        android:shortcutShortLabel="@string/shortcut_settings"
+        android:shortcutLongLabel="@string/shortcut_settings_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ruddarr://settings" />
+    </shortcut>
+</shortcuts>

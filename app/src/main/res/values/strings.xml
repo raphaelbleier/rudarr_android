@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Ruddarr</string>
+    <string name="shortcut_movies">Movies</string>
+    <string name="shortcut_movies_long">Open movies</string>
+    <string name="shortcut_series">Series</string>
+    <string name="shortcut_series_long">Open series</string>
+    <string name="shortcut_calendar">Calendar</string>
+    <string name="shortcut_calendar_long">Open calendar</string>
+    <string name="shortcut_settings">Settings</string>
+    <string name="shortcut_settings_long">Open settings</string>
+</resources>

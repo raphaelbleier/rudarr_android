@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Added a native Android app with Material 3 Expressive, secure Arr instance management, media libraries, calendar, activity queue, and series episode controls
 - Support alternate instance URLs and automatic network detection
 - Detect instance protocol automatically when none is set
 - Display queue status for movies, seasons and episodes
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Trigger haptic feedback when an alert is displayed
 
 ### Changed
+- Added an editorial Material 3 Expressive visual system with connected controls, wavy download progress, and a local Android app icon
 - Improved instance synchronization across devices
 - Improved byte formatting precision
 - Improved image loading performance
