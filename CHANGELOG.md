@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Several dozen internal code improvements
 
 ### Fixed
+- Fixed loading local Radarr and Sonarr instances served over HTTP
 - Fixed toasts not displaying above some sheets
 - Fixed calendar/queue not updating instances when changed
 - Fixed sidebar colors on macOS 27
