@@ -444,7 +444,7 @@ private fun MediaScreen(modifier: Modifier, service: ServiceType, state: AppStat
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {
-                items(filtered, key = { "${service.name}-${it.id}-${it.title}" }) { record -> MediaCard(record) { if (record.raw.has("id")) viewModel.open(record) else viewModel.preview(record) }
+                items(filtered, key = { "${service.name}-${it.id}-${it.title}" }) { record -> MediaCard(record, record.posterUrl(instance)) { if (record.raw.has("id")) viewModel.open(record) else viewModel.preview(record) }
                 }
             }
         }
@@ -494,7 +494,7 @@ private fun List<MediaRecord>.filterAndSort(
 }
 
 @Composable
-private fun MediaCard(record: MediaRecord, onClick: () -> Unit) {
+private fun MediaCard(record: MediaRecord, posterUrl: String?, onClick: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     val posterBase = if (record.service == ServiceType.RADARR) colors.primaryContainer else colors.secondaryContainer
     val posterAccent = if (record.service == ServiceType.RADARR) colors.tertiaryContainer else colors.primaryContainer
@@ -537,7 +537,7 @@ private fun MediaCard(record: MediaRecord, onClick: () -> Unit) {
                     tint = if (record.service == ServiceType.RADARR) colors.onPrimaryContainer.copy(alpha = 0.72f) else colors.onSecondaryContainer.copy(alpha = 0.72f),
                 )
                 AsyncImage(
-                    model = record.posterUrl,
+                    model = posterUrl,
                     contentDescription = "Poster for ${record.title}",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
@@ -567,7 +567,7 @@ private fun MediaSheet(record: MediaRecord, state: AppState, viewModel: RuddarrV
         ) {
             item {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    AsyncImage(record.posterUrl, "Poster for ${record.title}", Modifier.size(width = 92.dp, height = 138.dp).clip(RoundedCornerShape(12.dp)), contentScale = ContentScale.Crop)
+                    AsyncImage(record.posterUrl(instance), "Poster for ${record.title}", Modifier.size(width = 92.dp, height = 138.dp).clip(RoundedCornerShape(12.dp)), contentScale = ContentScale.Crop)
                     Spacer(Modifier.width(16.dp))
                     Column(Modifier.weight(1f)) {
                         Text(record.title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
@@ -1238,7 +1238,7 @@ private fun CalendarScreen(modifier: Modifier, state: AppState, viewModel: Rudda
                                     MaterialTheme.colorScheme.onSecondaryContainer
                                 },
                             )
-                            AsyncImage(record.posterUrl, null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+                            AsyncImage(record.posterUrl(viewModel.instanceFor(record)), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                         }
                         Spacer(Modifier.width(12.dp))
                         Column(Modifier.weight(1f)) {

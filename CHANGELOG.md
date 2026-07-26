@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Several dozen internal code improvements
 
 ### Fixed
+- Load Android library covers from the local Arr media server
 - Read Sonarr episode-file statistics for Android and Wear OS series summaries
 - Keep Wear OS library metric labels readable on small round displays
 - Fixed loading local Radarr and Sonarr instances served over HTTP

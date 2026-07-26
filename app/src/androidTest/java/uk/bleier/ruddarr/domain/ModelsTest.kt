@@ -218,6 +218,25 @@ class ModelsTest {
     }
 
     @Test
+    fun mediaRecordUsesTheLocalArrCoverBeforeAnExternalPoster() {
+        val record = MediaRecord(ServiceType.RADARR, JSONObject().apply {
+            put("images", org.json.JSONArray().put(JSONObject().apply {
+                put("coverType", "poster")
+                put("url", "/MediaCover/42/poster.jpg?lastWrite=123")
+                put("remoteUrl", "https://image.example.test/poster.jpg")
+            }))
+        })
+        val instance = InstanceConfig(
+            service = ServiceType.RADARR,
+            label = "Local Radarr",
+            primaryUrl = "http://radarr.local:7878/",
+            apiKey = "key",
+        )
+
+        assertEquals("http://radarr.local:7878/MediaCover/42/poster.jpg?lastWrite=123", record.posterUrl(instance))
+    }
+
+    @Test
     fun releaseDownloadPayloadTargetsMovieSeasonOrEpisode() {
         val release = JSONObject().put("guid", "release-guid").put("indexerId", 17)
         val movie = MediaRecord(ServiceType.RADARR, JSONObject().put("id", 10))

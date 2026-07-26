@@ -7,6 +7,7 @@ A native Kotlin and Jetpack Compose client for self-hosted Radarr and Sonarr ins
 - Manage Radarr movies and Sonarr series across multiple instances
 - Search, add, edit, monitor, delete, and trigger automatic searches
 - Browse movies, series, seasons, episodes, calendar releases, queue activity, and history
+- Load library covers directly from local Arr instances, with an external-image fallback
 - Send interactive releases to the correct movie, season, or episode
 - Manually import queued files and manage Arr webhooks
 - Filter and sort libraries, calendar items, activity, and release results locally

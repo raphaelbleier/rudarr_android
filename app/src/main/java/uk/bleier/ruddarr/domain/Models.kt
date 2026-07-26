@@ -128,18 +128,25 @@ data class MediaRecord(
         get() = raw.optJSONObject("movieFile")?.optJSONObject("quality")?.optJSONObject("quality")?.optString("name").orEmpty()
     val status: String get() = raw.optString("status").replaceFirstChar { it.uppercase() }
     val genres: List<String> get() = raw.optJSONArray("genres").toStringList()
-    val posterUrl: String?
+    private val poster: JSONObject?
         get() = raw.optJSONArray("images")?.let { images ->
             List(images.length()) { images.optJSONObject(it) }
                 .firstOrNull { it?.optString("coverType") == "poster" }
-                ?.optString("remoteUrl")
-                ?.takeIf { it.isNotBlank() }
         } ?: raw.optJSONObject("series")?.optJSONArray("images")?.let { images ->
             List(images.length()) { images.optJSONObject(it) }
                 .firstOrNull { it?.optString("coverType") == "poster" }
-                ?.optString("remoteUrl")
-                ?.takeIf { it.isNotBlank() }
         }
+
+    fun posterUrl(instance: InstanceConfig?): String? {
+        val image = poster ?: return null
+        val localPath = image.optString("url").takeIf { it.isNotBlank() }
+        val localUrl = when {
+            localPath == null -> null
+            localPath.startsWith("http://") || localPath.startsWith("https://") -> localPath
+            else -> instance?.candidates?.firstOrNull()?.let { base -> "$base/${localPath.trimStart('/')}" }
+        }
+        return localUrl ?: image.optString("remoteUrl").takeIf { it.isNotBlank() }
+    }
     val details: String
         get() = buildList {
             if (year > 0) add(year.toString())

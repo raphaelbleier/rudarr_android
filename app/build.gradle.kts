@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.compose.material3.window.size)
     implementation("androidx.compose.material:material-icons-extended")
     implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     androidTestImplementation(libs.compose.ui.test.junit4)
