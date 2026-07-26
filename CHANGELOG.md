@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+## 2.1.1 - 2026-07-26
 ### Added
 - Added a standalone Wear OS client with Material 3 Expressive, local Radarr and Sonarr status, and encrypted watch-side credentials
 - Added a native Android app with Material 3 Expressive, secure Arr instance management, media libraries, calendar, activity queue, and series episode controls

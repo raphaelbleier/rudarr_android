@@ -12,8 +12,8 @@ android {
         applicationId = "uk.bleier.ruddarr.wear"
         minSdk = 30
         targetSdk = 37
-        versionCode = 1
-        versionName = "2.1.0"
+        versionCode = 2
+        versionName = "2.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
