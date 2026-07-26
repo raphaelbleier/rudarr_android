@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Request Android's local network permission before connecting to Radarr or Sonarr on a LAN
+
 ## 2.1.1 - 2026-07-26
 ### Added
 - Added a standalone Wear OS client with Material 3 Expressive, local Radarr and Sonarr status, and encrypted watch-side credentials

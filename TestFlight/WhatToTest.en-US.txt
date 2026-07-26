@@ -1,0 +1,2 @@
+### Fixed
+- Request Android's local network permission before connecting to Radarr or Sonarr on a LAN

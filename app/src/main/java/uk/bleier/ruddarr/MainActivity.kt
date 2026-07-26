@@ -1,11 +1,15 @@
 package uk.bleier.ruddarr
 
-import android.os.Bundle
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -124,12 +128,17 @@ import uk.bleier.ruddarr.ui.RuddarrTheme
 
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<RuddarrViewModel>()
+    private val localNetworkPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) viewModel.refreshForDestination()
+        else viewModel.showLocalNetworkPermissionRequired()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         handleDeepLink(intent)
         setContent { RuddarrApp(viewModel) }
+        requestLocalNetworkAccess()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -147,6 +156,17 @@ class MainActivity : ComponentActivity() {
             else -> null
         }
         destination?.let(viewModel::setDestination)
+    }
+
+    private fun requestLocalNetworkAccess() {
+        if (
+            Build.VERSION.SDK_INT < 37 ||
+            checkSelfPermission(Manifest.permission.ACCESS_LOCAL_NETWORK) == PackageManager.PERMISSION_GRANTED
+        ) {
+            viewModel.refreshForDestination()
+        } else {
+            localNetworkPermission.launch(Manifest.permission.ACCESS_LOCAL_NETWORK)
+        }
     }
 }
 

@@ -75,7 +75,6 @@ class RuddarrViewModel(application: Application) : AndroidViewModel(application)
             activeRadarrId = instances.firstOrNull { it.service == ServiceType.RADARR }?.id,
             activeSonarrId = instances.firstOrNull { it.service == ServiceType.SONARR }?.id,
         )
-        refreshForDestination()
     }
 
     fun setDestination(destination: AppDestination) {
@@ -507,6 +506,10 @@ class RuddarrViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun consumeMessage() { state.message?.let { state = state.copy(message = null) } }
+
+    fun showLocalNetworkPermissionRequired() {
+        show("Allow Nearby devices so Ruddarr can reach local Radarr and Sonarr instances.")
+    }
 
     private fun launch(success: String? = null, block: suspend () -> Unit) {
         viewModelScope.launch {
