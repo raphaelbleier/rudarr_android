@@ -12,10 +12,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -26,6 +29,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -38,6 +42,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -52,6 +57,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
@@ -395,77 +402,96 @@ private fun MediaScreen(modifier: Modifier, service: ServiceType, state: AppStat
     var sort by remember(service) { mutableStateOf("added") }
     var ascending by remember(service) { mutableStateOf(false) }
     var rootFolder by remember(service) { mutableStateOf<String?>(null) }
+    var filtersExpanded by remember(service) { mutableStateOf(false) }
     val library = if (service == ServiceType.RADARR) state.movies else state.series
     val results = if (service == ServiceType.RADARR) state.movieSearch else state.seriesSearch
     val source = if (query.isBlank() || results.isNotEmpty()) if (results.isNotEmpty()) results else library else library.filter { it.title.contains(query, true) }
     val filtered = source.filterAndSort(service, filter, sort, ascending, rootFolder)
     val rootFolders = library.map { it.raw.optString("rootFolderPath") }.filter { it.isNotBlank() }.distinct().sorted()
     val instance = viewModel.active(service)
+    val motion = MaterialTheme.motionScheme
 
     if (instance == null) {
         EmptyState(modifier, "Add a ${service.apiLabel} instance", "Connect Ruddarr to begin managing your library.", "Open Settings") { viewModel.setDestination(AppDestination.SETTINGS) }
         return
     }
-    Column(modifier.padding(horizontal = 16.dp)) {
-        LibraryHero(service, filtered.size, instance.displayName())
-        Spacer(Modifier.height(12.dp))
-        InstancePicker(service, state, viewModel)
-        Spacer(Modifier.height(8.dp))
-        OutlinedTextField(
-            value = query,
-            onValueChange = {
-                query = it
-                if (it.length >= 2) viewModel.search(service, it) else viewModel.clearSearch(service)
-            },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            leadingIcon = { Icon(Icons.Default.Search, null) },
-            trailingIcon = {
-                if (query.isNotBlank()) IconButton(onClick = { query = ""; viewModel.clearSearch(service) }) { Icon(Icons.Default.Close, "Clear") }
-            },
-            label = { Text("Search ${service.apiLabel}") },
-        )
-        Spacer(Modifier.height(10.dp))
-        LibraryModeButtonGroup(service, filter) { filter = it }
-        Spacer(Modifier.height(8.dp))
-        if (service == ServiceType.RADARR) {
-            FilterRow {
-                listOf("monitored" to "Monitored", "unmonitored" to "Unmonitored", "downloaded" to "Downloaded", "dangling" to "Dangling").forEach { (value, label) ->
-                    FilterChip(filter == value, { filter = value }, label = { Text(label) })
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(156.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = modifier,
+    ) {
+        item(span = { GridItemSpan(maxLineSpan) }) { LibraryHero(service, filtered.size, instance.displayName()) }
+        item(span = { GridItemSpan(maxLineSpan) }) { InstancePicker(service, state, viewModel) }
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            OutlinedTextField(
+                value = query,
+                onValueChange = {
+                    query = it
+                    if (it.length >= 2) viewModel.search(service, it) else viewModel.clearSearch(service)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                leadingIcon = { Icon(Icons.Default.Search, null) },
+                trailingIcon = {
+                    if (query.isNotBlank()) IconButton(onClick = { query = ""; viewModel.clearSearch(service) }) { Icon(Icons.Default.Close, "Clear") }
+                },
+                label = { Text("Search ${service.apiLabel}") },
+            )
+        }
+        item(span = { GridItemSpan(maxLineSpan) }) { LibraryModeButtonGroup(service, filter) { filter = it } }
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(onClick = { filtersExpanded = !filtersExpanded }, modifier = Modifier.fillMaxWidth()) {
+                    Text(if (filtersExpanded) "Hide filters" else "Filters", modifier = Modifier.weight(1f))
+                    Icon(
+                        if (filtersExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        contentDescription = if (filtersExpanded) "Collapse filters" else "Expand filters",
+                    )
+                }
+                AnimatedVisibility(
+                    visible = filtersExpanded,
+                    enter = expandVertically(animationSpec = motion.defaultSpatialSpec()) + fadeIn(animationSpec = motion.defaultEffectsSpec()),
+                    exit = shrinkVertically(animationSpec = motion.fastSpatialSpec()) + fadeOut(animationSpec = motion.fastEffectsSpec()),
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FilterRow {
+                            val options = if (service == ServiceType.RADARR) {
+                                listOf("monitored" to "Monitored", "unmonitored" to "Unmonitored", "downloaded" to "Downloaded", "dangling" to "Dangling")
+                            } else {
+                                listOf("monitored" to "Monitored", "unmonitored" to "Unmonitored", "ended" to "Ended", "dangling" to "Dangling")
+                            }
+                            options.forEach { (value, label) ->
+                                FilterChip(filter == value, { filter = value }, label = { Text(label) })
+                            }
+                        }
+                        FilterRow {
+                            listOf("title" to "Title", "year" to "Year", "added" to "Added", "rating" to "Rating", "size" to "Size").forEach { (value, label) ->
+                                FilterChip(sort == value, { sort = value; if (value == "title") ascending = true }, label = { Text(label) })
+                            }
+                        }
+                        FilterRow {
+                            FilterChip(ascending, { ascending = !ascending }, label = { Text(if (ascending) "Ascending" else "Descending") })
+                            if (rootFolders.isNotEmpty()) {
+                                FilterChip(rootFolder == null, { rootFolder = null }, label = { Text("All folders") })
+                                rootFolders.forEach { folder -> FilterChip(rootFolder == folder, { rootFolder = folder }, label = { Text(folder.substringAfterLast('/').ifBlank { folder }) }) }
+                            }
+                        }
+                    }
                 }
             }
-        } else {
-            FilterRow {
-                listOf("monitored" to "Monitored", "unmonitored" to "Unmonitored", "ended" to "Ended", "dangling" to "Dangling").forEach { (value, label) ->
-                    FilterChip(filter == value, { filter = value }, label = { Text(label) })
-                }
-            }
         }
-        FilterRow {
-            listOf("title" to "Title", "year" to "Year", "added" to "Added", "rating" to "Rating", "size" to "Size").forEach { (value, label) ->
-                FilterChip(sort == value, { sort = value; if (value == "title") ascending = true }, label = { Text(label) })
-            }
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Text("${filtered.size} ${if (service == ServiceType.RADARR) "movies" else "series"}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        FilterRow {
-            FilterChip(ascending, { ascending = !ascending }, label = { Text(if (ascending) "Ascending" else "Descending") })
-            if (rootFolders.isNotEmpty()) {
-                FilterChip(rootFolder == null, { rootFolder = null }, label = { Text("All folders") })
-                rootFolders.forEach { folder -> FilterChip(rootFolder == folder, { rootFolder = folder }, label = { Text(folder.substringAfterLast('/').ifBlank { folder }) }) }
-            }
-        }
-        Text("${filtered.size} ${if (service == ServiceType.RADARR) "movies" else "series"}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Spacer(Modifier.height(10.dp))
         if (filtered.isEmpty() && !state.isLoading) {
-            EmptyState(Modifier.fillMaxSize(), "No ${if (service == ServiceType.RADARR) "movies" else "series"}", "Search to add one or refresh this library.", "Refresh") { viewModel.refreshLibrary(service) }
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                EmptyState(Modifier.fillMaxWidth().height(360.dp), "No ${if (service == ServiceType.RADARR) "movies" else "series"}", "Search to add one or refresh this library.", "Refresh") { viewModel.refreshLibrary(service) }
+            }
         } else {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(156.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                items(filtered, key = { "${service.name}-${it.id}-${it.title}" }) { record -> MediaCard(record, record.posterUrl(instance)) { if (record.raw.has("id")) viewModel.open(record) else viewModel.preview(record) }
-                }
+            items(filtered, key = { "${service.name}-${it.id}-${it.title}" }) { record ->
+                MediaCard(record, record.posterUrl(instance)) { if (record.raw.has("id")) viewModel.open(record) else viewModel.preview(record) }
             }
         }
     }

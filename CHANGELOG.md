@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Made movie and series library filters collapsible and scroll with the library instead of staying above the results
+
 ### Fixed
 - Request Android's local network permission before connecting to Radarr or Sonarr on a LAN
 
