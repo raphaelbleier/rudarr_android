@@ -192,6 +192,32 @@ class ModelsTest {
     }
 
     @Test
+    fun seriesRecordUsesNestedEpisodeStatisticsInItsSummary() {
+        val series = MediaRecord(ServiceType.SONARR, JSONObject().apply {
+            put("year", 2024)
+            put("statistics", JSONObject().apply {
+                put("episodeFileCount", 12)
+                put("episodeCount", 24)
+            })
+        })
+
+        assertEquals(12, series.episodeFileCount)
+        assertEquals(24, series.episodeCount)
+        assertEquals("2024 · 12 / 24 episodes", series.details)
+    }
+
+    @Test
+    fun seriesRecordFallsBackToLegacyEpisodeCounts() {
+        val series = MediaRecord(ServiceType.SONARR, JSONObject().apply {
+            put("episodeFileCount", 3)
+            put("episodeCount", 5)
+        })
+
+        assertEquals(3, series.episodeFileCount)
+        assertEquals(5, series.episodeCount)
+    }
+
+    @Test
     fun releaseDownloadPayloadTargetsMovieSeasonOrEpisode() {
         val release = JSONObject().put("guid", "release-guid").put("indexerId", 17)
         val movie = MediaRecord(ServiceType.RADARR, JSONObject().put("id", 10))

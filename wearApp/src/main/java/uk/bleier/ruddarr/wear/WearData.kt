@@ -69,6 +69,15 @@ data class WatchSnapshot(
     val items: List<WatchLibraryItem>,
 )
 
+internal fun sonarrEpisodeFileCount(statisticsCount: Int?, legacyCount: Int): Int = statisticsCount ?: legacyCount
+
+private fun JSONObject.sonarrEpisodeFileCount(): Int = sonarrEpisodeFileCount(
+    statisticsCount = optJSONObject("statistics")
+        ?.takeIf { it.has("episodeFileCount") }
+        ?.optInt("episodeFileCount"),
+    legacyCount = optInt("episodeFileCount"),
+)
+
 class WearInstanceStore(private val context: Context) {
     private val preferences = context.getSharedPreferences("ruddarr.wear.instances", Context.MODE_PRIVATE)
 
@@ -130,19 +139,20 @@ class WearArrApi {
             val available = if (instance.service == WatchService.RADARR) {
                 media.optBoolean("hasFile")
             } else {
-                media.optInt("episodeFileCount") > 0
+                media.sonarrEpisodeFileCount() > 0
             }
             val detail = when (instance.service) {
                 WatchService.RADARR -> listOf(year, if (available) "Ready" else "Wanted").filter { it.isNotBlank() }.joinToString(" · ")
                 WatchService.SONARR -> {
-                    val episodes = media.optInt("episodeFileCount")
+                    val episodes = media.sonarrEpisodeFileCount()
                     listOf(year, "$episodes episodes").filter { it.isNotBlank() }.joinToString(" · ")
                 }
             }
             WatchLibraryItem(title, detail, available)
         }
         val wanted = library.count { media ->
-            if (instance.service == WatchService.RADARR) !media.optBoolean("hasFile") else media.optInt("episodeFileCount") == 0
+            if (instance.service == WatchService.RADARR) !media.optBoolean("hasFile")
+            else media.sonarrEpisodeFileCount() == 0
         }
         WatchSnapshot(
             service = instance.service,

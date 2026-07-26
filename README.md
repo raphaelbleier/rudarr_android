@@ -16,12 +16,17 @@ A native Kotlin and Jetpack Compose client for self-hosted Radarr and Sonarr ins
 
 ## Screenshots
 
+### Android
+
 <p>
-  <img src="docs/screenshots/movies.png" alt="Movies library" width="19%">
-  <img src="docs/screenshots/series.png" alt="Series seasons" width="19%">
-  <img src="docs/screenshots/calendar.png" alt="Calendar" width="19%">
-  <img src="docs/screenshots/activity.png" alt="Activity queue" width="19%">
-  <img src="docs/screenshots/settings.png" alt="Local instance settings" width="19%">
+  <img src="docs/screenshots/movies.png" alt="Live Radarr movie library on Android" width="32%">
+  <img src="docs/screenshots/series.png" alt="Live Sonarr series library on Android" width="32%">
+</p>
+
+### Wear OS
+
+<p>
+  <img src="docs/screenshots/wear-series.png" alt="Live Sonarr series status on Wear OS" width="32%">
 </p>
 
 ## Requirements
@@ -46,6 +51,8 @@ Download the signed Android or Wear OS APK from the [GitHub Releases](https://gi
 Add instances directly in **Settings**. For a private debug seed file, copy `app/src/debug/assets/seed-instances.example.json` to `app/src/debug/assets/seed-instances.json`, fill in your local instance values, and use **Load debug instance seeds**. The seed file is ignored by Git.
 
 The Wear OS app is standalone: configure its local Radarr and Sonarr URLs directly on the watch. Its credentials are stored separately with Android Keystore and it makes direct local network requests; no cloud account or Firebase is involved.
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) for setup, architecture, and local verification, and [CONTRIBUTING.md](CONTRIBUTING.md) for contribution expectations.
 
 The repository ships an Android release workflow. It requires these GitHub Actions secrets:
 

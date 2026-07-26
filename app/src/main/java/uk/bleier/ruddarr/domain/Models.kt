@@ -108,6 +108,16 @@ data class MediaRecord(
     val hasFile: Boolean
         get() = if (service == ServiceType.RADARR) raw.optBoolean("hasFile", raw.has("movieFile"))
         else raw.optJSONObject("statistics")?.optDouble("percentOfEpisodes", 0.0)?.let { it >= 100.0 } == true
+    val episodeFileCount: Int
+        get() = raw.optJSONObject("statistics")
+            ?.takeIf { it.has("episodeFileCount") }
+            ?.optInt("episodeFileCount")
+            ?: raw.optInt("episodeFileCount")
+    val episodeCount: Int
+        get() = raw.optJSONObject("statistics")
+            ?.takeIf { it.has("episodeCount") }
+            ?.optInt("episodeCount")
+            ?: raw.optInt("episodeCount")
     val fileId: Int
         get() = raw.optInt("movieFileId").takeIf { it > 0 } ?: raw.optJSONObject("movieFile")?.optInt("id") ?: 0
     val filePath: String
@@ -133,6 +143,7 @@ data class MediaRecord(
     val details: String
         get() = buildList {
             if (year > 0) add(year.toString())
+            if (service == ServiceType.SONARR && episodeCount > 0) add("$episodeFileCount / $episodeCount episodes")
             raw.optInt("runtime").takeIf { it > 0 }?.let { add("${it} min") }
             raw.optString("network").takeIf { it.isNotBlank() }?.let(::add)
             raw.optString("studio").takeIf { it.isNotBlank() }?.let(::add)

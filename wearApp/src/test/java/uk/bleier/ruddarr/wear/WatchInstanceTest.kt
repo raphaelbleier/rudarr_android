@@ -39,4 +39,14 @@ class WatchInstanceTest {
 
         assertEquals("Enter the API key.", instance.validationError())
     }
+
+    @Test
+    fun readsEpisodeFileCountsFromSonarrStatistics() {
+        assertEquals(12, sonarrEpisodeFileCount(statisticsCount = 12, legacyCount = 0))
+    }
+
+    @Test
+    fun fallsBackToLegacySonarrEpisodeFileCount() {
+        assertEquals(7, sonarrEpisodeFileCount(statisticsCount = null, legacyCount = 7))
+    }
 }

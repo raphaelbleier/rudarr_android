@@ -33,6 +33,7 @@ Changed
 - Several dozen internal code improvements
 
 Fixed
+- Read Sonarr episode-file statistics for Android and Wear OS series summaries
 - Keep Wear OS library metric labels readable on small round displays
 - Fixed loading local Radarr and Sonarr instances served over HTTP
 - Fixed toasts not displaying above some sheets
