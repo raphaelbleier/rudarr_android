@@ -346,13 +346,18 @@ private fun LibraryScreen(
 
 @Composable
 private fun LibrarySummary(snapshot: WatchSnapshot) {
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Metric("Library", snapshot.total.toString(), Modifier.weight(1f))
-        Metric("Wanted", snapshot.wanted.toString(), Modifier.weight(1f))
-        Metric("Queue", snapshot.queueCount.toString(), Modifier.weight(1f))
+        Metric("Library", snapshot.total.toString(), Modifier.fillMaxWidth())
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Metric("Wanted", snapshot.wanted.toString(), Modifier.weight(1f))
+            Metric("Queue", snapshot.queueCount.toString(), Modifier.weight(1f))
+        }
     }
 }
 
@@ -362,7 +367,7 @@ private fun Metric(label: String, value: String, modifier: Modifier = Modifier) 
         modifier = modifier
             .clip(RoundedCornerShape(14.dp))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .padding(vertical = 10.dp, horizontal = 8.dp),
+            .padding(vertical = 6.dp, horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
